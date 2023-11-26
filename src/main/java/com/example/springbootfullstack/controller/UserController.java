@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,12 +29,13 @@ public class UserController {
     private String url;
 
     @RequestMapping("/sayHi")
-    public String sayHi() {
+    public String sayHi(Model model) {
         logger.trace("================ trace ================");
         logger.debug("================ debug ================");
         logger.info("================ info ================");
         logger.warn("================ warn ================");
         logger.error("================ error ================");
+        model.addAttribute("aaa","我是一个小兵");
         return "index";
     }
 }
