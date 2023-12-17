@@ -2,6 +2,9 @@ package com.example.springbootfullstack.controller;
 
 import com.example.springbootfullstack.UserRepository;
 import com.example.springbootfullstack.Entity.User;
+import com.theokanning.openai.completion.CompletionChoice;
+import com.theokanning.openai.completion.CompletionRequest;
+import com.theokanning.openai.service.OpenAiService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
+import java.util.List;
 
 @Controller
 //@RequestMapping("/user")
@@ -68,5 +72,29 @@ public class UserController {
         Iterable<User> users = userRepository.findAll();
         model.addAttribute("users", users);
         return "all";
+    }
+
+    @PostMapping("/ask")
+    public String Chatgpt(String question, Model model) {
+        String token = System.getenv("OPENAI_TOKEN");
+
+        System.out.println(question);
+        OpenAiService service = new OpenAiService(token);
+        CompletionRequest completionRequest = CompletionRequest.builder()
+                .model("text-davinci-003")
+                .prompt(question)
+                .temperature(0.5)
+                .maxTokens(2048)
+                .topP(1D)
+                .frequencyPenalty(0D)
+                .presencePenalty(0D)
+                .build();
+        service.createCompletion(completionRequest).getChoices().forEach(System.out::println);
+
+        List<CompletionChoice> choicesList = service.createCompletion(completionRequest).getChoices();
+
+        String answer = choicesList.get(0).getText();
+        model.addAttribute("choices", answer);
+        return "ChatGptAnswers";
     }
 }

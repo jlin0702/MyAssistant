@@ -1,0 +1,94 @@
+body, h1, h2, p, img {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+}
+
+#bigbox {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+#banner {
+    position: relative;
+    height: 200px; /* You can adjust the height as needed */
+    overflow: hidden;
+}
+
+#banner img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+nav {
+    background-color: #333;
+    padding: 10px;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    margin-right: 10px;
+}
+
+.current-page {
+    font-weight: bold;
+}
+
+#main {
+    display: flex;
+}
+
+#main_left, #main_right {
+    flex: 1;
+    padding: 10px;
+}
+
+#main_right {
+    background-color: #f4f4f4;
+}
+
+h2 {
+    color: #333;
+}
+
+#main_left img, #main_right img, #picture img {
+    max-width: 100%;
+    height: auto;
+}
+
+#travel {
+    margin-top: 20px;
+}
+
+#picture img {
+    border: 1px solid #333;
+}
+
+footer {
+    margin-top: 20px;
+    background-color: #333;
+    color: white;
+    padding: 10px;
+    text-align: center;
+}
+
+.article-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.article-title {
+    color: #333;
+}
+
+.article-content p {
+    margin-bottom: 20px;
+}

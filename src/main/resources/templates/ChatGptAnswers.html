@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Result</title>
+</head>
+<body>
+<h1>Result</h1>
+
+<ul id="resultList">
+  <li th:each="choice : ${choices}" th:text="${choice.text}"></li>
+</ul>
+
+<script>
+  fetch('/ask', { method: 'Post' })
+          .then(response => response.json())
+          .then(data => {
+            const resultList = document.getElementById('resultList');
+            data.choices.forEach(choice => {
+              const listItem = document.createElement('li');
+              listItem.textContent = choice.text;
+              resultList.appendChild(listItem);
+            });
+          })
+          .catch(error => console.error(error));
+</script>
+</body>
+</html>
