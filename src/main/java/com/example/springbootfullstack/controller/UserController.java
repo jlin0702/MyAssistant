@@ -2,6 +2,8 @@ package com.example.springbootfullstack.controller;
 
 import com.example.springbootfullstack.UserRepository;
 import com.example.springbootfullstack.Entity.User;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.theokanning.openai.completion.CompletionChoice;
 import com.theokanning.openai.completion.CompletionRequest;
 import com.theokanning.openai.service.OpenAiService;
@@ -15,7 +17,15 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 //@RequestMapping("/user")
@@ -34,14 +44,33 @@ public class UserController {
     @Value("${spring.datasource.url}")
     private String url;
 
-    @RequestMapping("/sayHi")
-    public String sayHi(Model model) {
+    @RequestMapping("/")
+    public String index(Model model) {
         logger.trace("================ trace ================");
         logger.debug("================ debug ================");
         logger.info("================ info ================");
         logger.warn("================ warn ================");
         logger.error("================ error ================");
-        model.addAttribute("aaa","我是一个小兵");
+        model.addAttribute("name","Jacky");
+        model.addAttribute("gender", "Male");
+        model.addAttribute("hobby", "Playing Games");
+        model.addAttribute("personality", "Lively");
+        model.addAttribute("hometown", "New York");
+        model.addAttribute("major", "Computer Science");
+        try {
+            URL url = new URL("https://zenquotes.io/api/today");
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestProperty("accept", "application/json");
+            InputStream responseStream = connection.getInputStream();
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode root = mapper.readTree(responseStream);
+            model.addAttribute("quote", root.get(0).path("q").asText());
+            model.addAttribute("author", root.get(0).path("a").asText());
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
         return "index";
     }
 
