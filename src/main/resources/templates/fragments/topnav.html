@@ -1,0 +1,5 @@
+<nav th:fragment="navbar">
+  <a th:each="navLink : ${nav}"
+     th:class="${#request.getRequestURI() == navLink.getUrl() ? 'current-page' : ''}"
+     th:href="${navLink.getUrl()}" th:text="${navLink.getLabel()}"></a>
+</nav>

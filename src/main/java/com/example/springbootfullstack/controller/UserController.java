@@ -2,6 +2,7 @@ package com.example.springbootfullstack.controller;
 
 import com.example.springbootfullstack.UserRepository;
 import com.example.springbootfullstack.Entity.User;
+import com.example.springbootfullstack.model.NavLink;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.theokanning.openai.completion.CompletionChoice;
@@ -20,12 +21,9 @@ import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 //@RequestMapping("/user")
@@ -34,6 +32,14 @@ public class UserController {
     @PostConstruct
     public void init() {
         System.out.println("UserController  init    hello world");
+        nav = Arrays.asList(
+                new NavLink("Home", "/"),
+                new NavLink("Article", "/article"),
+                new NavLink("Log", "/log"),
+                new NavLink("Greeting", "/greeting"),
+                new NavLink("Resume", "/pdf"),
+                new NavLink("Ask ChatGPT", "/ask")
+        );
     }
 
     private static Logger logger =
@@ -43,7 +49,7 @@ public class UserController {
     private String port;
     @Value("${spring.datasource.url}")
     private String url;
-
+    private List<NavLink> nav;
     @RequestMapping("/")
     public String index(Model model) {
         logger.trace("================ trace ================");
@@ -51,6 +57,7 @@ public class UserController {
         logger.info("================ info ================");
         logger.warn("================ warn ================");
         logger.error("================ error ================");
+        model.addAttribute("nav", nav);
         model.addAttribute("name","Jacky");
         model.addAttribute("gender", "Male");
         model.addAttribute("hobby", "Playing Games");
@@ -79,13 +86,14 @@ public class UserController {
 
     @GetMapping("/greeting")
     public String greetingForm(Model model) {
+        model.addAttribute("nav", nav);
         model.addAttribute("user", new User());
         return "greeting";
     }
 
     @PostMapping("/greeting")
-    public String greetingSubmit(@ModelAttribute User user) {
-        logger.trace("================ Here ================");
+    public String greetingSubmit(@ModelAttribute User user, Model model) {
+        model.addAttribute("nav", nav);
         User newUser = new User();
         newUser.setName(user.getName());
         newUser.setAge(user.getAge());
@@ -96,11 +104,25 @@ public class UserController {
         return "result";
     }
 
-    @GetMapping("/all")
+    @GetMapping("/log")
     public String getMessage(Model model) {
+        model.addAttribute("nav", nav);
         Iterable<User> users = userRepository.findAll();
         model.addAttribute("users", users);
-        return "all";
+        return "log";
+    }
+
+    @GetMapping("/article")
+    public String getArticle(Model model) {
+        model.addAttribute("nav", nav);
+        return "article";
+    }
+
+    @GetMapping("/ask")
+    public String askChatgpt(Model model)
+    {
+        model.addAttribute("nav", nav);
+        return "ask";
     }
 
     @PostMapping("/ask")
@@ -123,6 +145,7 @@ public class UserController {
         List<CompletionChoice> choicesList = service.createCompletion(completionRequest).getChoices();
 
         String answer = choicesList.get(0).getText();
+        model.addAttribute("nav", nav);
         model.addAttribute("choices", answer);
         return "ChatGptAnswers";
     }

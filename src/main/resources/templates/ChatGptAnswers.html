@@ -7,33 +7,27 @@
 </head>
 <body>
 <div class="big-box">
-  <nav>
-    <a href="/sayHi">首页</a>
-    <a href="duanwen.html">短文</a>
-    <a href="/all">日志</a>
-    <a href="/greeting">问候</a>
-    <a href="/pdf">简历</a>
-    <a class="current-page" href="Ask.html">问问AI</a>
-  </nav>
-<h1>Result</h1>
+  <nav th:replace="fragments/topnav :: navbar"></nav>
 
-<ul id="resultList">
-  <li th:each="choice : ${choices}" th:text="${choice}"></li>
-</ul>
+  <h1>Result</h1>
 
-<script>
-  fetch('/ask', { method: 'Post' })
-          .then(response => response.json())
-          .then(data => {
-            const resultList = document.getElementById('resultList');
-            data.choices.forEach(choice => {
-              const listItem = document.createElement('li');
-              listItem.textContent = choice.text;
-              resultList.appendChild(listItem);
-            });
-          })
-          .catch(error => console.error(error));
-</script>
+  <ul id="resultList">
+    <li th:each="choice : ${choices}" th:text="${choice}"></li>
+  </ul>
+
+  <script>
+    fetch('/ask', { method: 'Post' })
+            .then(response => response.json())
+            .then(data => {
+              const resultList = document.getElementById('resultList');
+              data.choices.forEach(choice => {
+                const listItem = document.createElement('li');
+                listItem.textContent = choice.text;
+                resultList.appendChild(listItem);
+              });
+            })
+            .catch(error => console.error(error));
+  </script>
 </div>
 </body>
 </html>
